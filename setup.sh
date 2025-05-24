@@ -110,6 +110,7 @@ fi
 EDITOR_LINES=(
     "export EDITOR='nano'"
     "export FZF_DEFAULT_OPTS='--height 40% --tmux 60% --layout reverse --border top'"
+    "export TERM=xterm-256color"
 )
 for LINE in "${EDITOR_LINES[@]}"; do
     grep -qxF "$LINE" "$HOME/.zshrc" || echo "$LINE" >> "$HOME/.zshrc"
