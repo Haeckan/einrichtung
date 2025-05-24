@@ -109,7 +109,7 @@ fi
 # Editor und fzf Optionen ans Ende der .zshrc
 EDITOR_LINES=(
     "export EDITOR='nano'"
-    "export FZF_DEFAULT_OPTS='--height 40% --tmux bottom,40% --layout reverse --border top'"
+    "export FZF_DEFAULT_OPTS='--height 40% --tmux 60% --layout reverse --border top'"
 )
 for LINE in "${EDITOR_LINES[@]}"; do
     grep -qxF "$LINE" "$HOME/.zshrc" || echo "$LINE" >> "$HOME/.zshrc"
