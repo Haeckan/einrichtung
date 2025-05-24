@@ -34,7 +34,7 @@ sudo apt install -y "${PACKAGES[@]}"
 # 3. zsh als Standardshell setzen
 if [ "$SHELL" != "$(which zsh)" ]; then
     echo "[+] Setze zsh als Standardshell für Benutzer $USER"
-    chsh -s $(which zsh)
+    chsh -s "$(which zsh)"
 fi
 
 # 4. Oh My Zsh installieren
@@ -59,7 +59,6 @@ for PLUGIN in "${PLUGINS[@]}"; do
             git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/$PLUGIN" || echo "[i] $PLUGIN bereits vorhanden."
             ;;
     esac
-    # .zshrc Ergänzung wird unten gemacht
 done
 
 # Plugins in .zshrc aktivieren (robust und doppelfrei)
@@ -79,21 +78,40 @@ else
     echo "plugins=(${WANTED_PLUGINS[*]})" >> "$HOME/.zshrc"
 fi
 
-# Zusätzliche Konfigurationen in .zshrc
-ZSHRC_APPEND=(
-    'ENABLE_CORRECTION="true"'
-    'zstyle ':omz:update' mode auto'
-    'ZSH_TMUX_AUTOSTART="true"'
-    'ZSH_TMUX_UNICODE="true"'
-    '# Set up fzf key bindings and fuzzy completion'
-    'source <(fzf --zsh)'
+# Zusätzliche Konfigurationen in .zshrc vor und nach source $ZSH/oh-my-zsh.sh
+
+if grep -q 'source \$ZSH/oh-my-zsh.sh' "$HOME/.zshrc"; then
+    PRE_LINES=(
+        'ENABLE_CORRECTION="true"'
+        'zstyle '"'"':omz:update'"'"' mode auto'
+        'ZSH_TMUX_AUTOSTART="true"'
+        'ZSH_TMUX_UNICODE="true"'
+    )
+    for LINE in "${PRE_LINES[@]}"; do
+        grep -qxF "$LINE" "$HOME/.zshrc" || sed -i "/source \$ZSH\/oh-my-zsh.sh/i $LINE" "$HOME/.zshrc"
+    done
+
+    if ! grep -q 'source <(fzf --zsh)' "$HOME/.zshrc"; then
+        sed -i "/source \$ZSH\/oh-my-zsh.sh/a source <(fzf --zsh)" "$HOME/.zshrc"
+    fi
+else
+    {
+        echo 'ENABLE_CORRECTION="true"'
+        echo 'zstyle '"'"':omz:update'"'"' mode auto'
+        echo 'ZSH_TMUX_AUTOSTART="true"'
+        echo 'ZSH_TMUX_UNICODE="true"'
+        echo 'source $ZSH/oh-my-zsh.sh'
+        echo 'source <(fzf --zsh)'
+    } >> "$HOME/.zshrc"
+fi
+
+# Editor und fzf Optionen ans Ende der .zshrc
+EDITOR_LINES=(
     "export EDITOR='nano'"
     "export FZF_DEFAULT_OPTS='--height 40% --tmux bottom,40% --layout reverse --border top'"
 )
-
-for LINE in "${ZSHRC_APPEND[@]}"; do
+for LINE in "${EDITOR_LINES[@]}"; do
     grep -qxF "$LINE" "$HOME/.zshrc" || echo "$LINE" >> "$HOME/.zshrc"
-    echo "[+] Zeile zu .zshrc hinzugefügt: $LINE"
 done
 
 # FZF über GitHub installieren
