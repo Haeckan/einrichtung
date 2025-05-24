@@ -26,7 +26,7 @@ echo "Acquire::http::Proxy \"\$(/usr/local/bin/apt-proxy-detect.sh)\";" | sudo t
 echo "[+] APT Proxy wurde gesetzt über apt-proxy-detect.sh."
 
 # 2. Programme installieren
-PACKAGES=(nala htop mc iftop zsh curl wget git tmux)
+PACKAGES=(nala htop mc iftop zsh curl wget git tmux rsync)
 echo "[+] Installiere Pakete: ${PACKAGES[*]}"
 sudo apt update
 sudo apt install -y "${PACKAGES[@]}"
@@ -82,11 +82,13 @@ fi
 # Zusätzliche Konfigurationen in .zshrc
 ZSHRC_APPEND=(
     'ENABLE_CORRECTION="true"'
-    'zstyle '"'":omz:update"'"' mode auto'
+    'zstyle ':'\''omz:update'\'' mode auto'
     'ZSH_TMUX_AUTOSTART="true"'
     'ZSH_TMUX_UNICODE="true"'
     '# Set up fzf key bindings and fuzzy completion'
     'source <(fzf --zsh)'
+    "export EDITOR='nano'"
+    "export FZF_DEFAULT_OPTS='--height 40% --tmux bottom,40% --layout reverse --border top'"
 )
 
 for LINE in "${ZSHRC_APPEND[@]}"; do
