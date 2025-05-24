@@ -2,13 +2,7 @@
 
 set -e
 
-# 1. Programme installieren
-PACKAGES=(nala htop mc iftop zsh curl wget git tmux)
-echo "[+] Installiere Pakete: ${PACKAGES[*]}"
-sudo apt update
-sudo apt install -y "${PACKAGES[@]}"
-
-# 2. Prüfen und setzen des apt Proxy über apt-proxy-detect.sh
+# 1. Prüfen und setzen des apt Proxy über apt-proxy-detect.sh
 APT_PROXY_SCRIPT="/usr/local/bin/apt-proxy-detect.sh"
 APT_CONF_FILE="/etc/apt/apt.conf.d/00aptproxy"
 
@@ -31,6 +25,12 @@ echo "Acquire::http::Proxy \"\$(/usr/local/bin/apt-proxy-detect.sh)\";" | sudo t
 
 echo "[+] APT Proxy wurde gesetzt über apt-proxy-detect.sh."
 
+# 2. Programme installieren
+PACKAGES=(nala htop mc iftop zsh curl wget git tmux)
+echo "[+] Installiere Pakete: ${PACKAGES[*]}"
+sudo apt update
+sudo apt install -y "${PACKAGES[@]}"
+
 # 3. zsh als Standardshell setzen
 if [ "$SHELL" != "$(which zsh)" ]; then
     echo "[+] Setze zsh als Standardshell für Benutzer $USER"
@@ -44,6 +44,19 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
     echo "[i] Oh My Zsh ist bereits installiert."
+fi
+
+# Zsh Plugins installieren
+ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+echo "[+] Installiere zsh-autosuggestions"
+git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" || echo "[i] zsh-autosuggestions bereits vorhanden."
+echo "[+] Installiere zsh-syntax-highlighting"
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" || echo "[i] zsh-syntax-highlighting bereits vorhanden."
+
+# Plugins in .zshrc aktivieren
+if ! grep -q "zsh-autosuggestions" "$HOME/.zshrc"; then
+    echo "[+] Aktiviere Plugins in .zshrc"
+    sed -i 's/^plugins=(/plugins=(zsh-autosuggestions zsh-syntax-highlighting /' "$HOME/.zshrc"
 fi
 
 # 5. Tmux Plugin Manager installieren und einrichten
