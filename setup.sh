@@ -82,7 +82,7 @@ fi
 # Zusätzliche Konfigurationen in .zshrc
 ZSHRC_APPEND=(
     'ENABLE_CORRECTION="true"'
-    'zstyle ':'\''omz:update'\'' mode auto'
+    'zstyle ':omz:update' mode auto'
     'ZSH_TMUX_AUTOSTART="true"'
     'ZSH_TMUX_UNICODE="true"'
     '# Set up fzf key bindings and fuzzy completion'
