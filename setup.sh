@@ -48,15 +48,35 @@ fi
 
 # Zsh Plugins installieren
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
-echo "[+] Installiere zsh-autosuggestions"
-git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" || echo "[i] zsh-autosuggestions bereits vorhanden."
-echo "[+] Installiere zsh-syntax-highlighting"
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" || echo "[i] zsh-syntax-highlighting bereits vorhanden."
+PLUGINS=(zsh-autosuggestions zsh-syntax-highlighting)
+for PLUGIN in "${PLUGINS[@]}"; do
+    echo "[+] Installiere Plugin: $PLUGIN"
+    case $PLUGIN in
+        zsh-autosuggestions)
+            git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/$PLUGIN" || echo "[i] $PLUGIN bereits vorhanden."
+            ;;
+        zsh-syntax-highlighting)
+            git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/$PLUGIN" || echo "[i] $PLUGIN bereits vorhanden."
+            ;;
+    esac
+    # .zshrc Ergänzung wird unten gemacht
+done
 
-# Plugins in .zshrc aktivieren
-if ! grep -q "zsh-autosuggestions" "$HOME/.zshrc"; then
-    echo "[+] Aktiviere Plugins in .zshrc"
-    sed -i 's/^plugins=(/plugins=(zsh-autosuggestions zsh-syntax-highlighting /' "$HOME/.zshrc"
+# Plugins in .zshrc aktivieren (robust und doppelfrei)
+WANTED_PLUGINS=(zsh-autosuggestions zsh-syntax-highlighting tmux cp zsh-interactive-cd fzf)
+
+if [ -f "$HOME/.zshrc" ]; then
+    echo "[+] Passe .zshrc Plugin-Zeile an"
+    EXISTING=$(grep -oP '^plugins=\(.*?\)' "$HOME/.zshrc" | sed -E 's/^plugins=\((.*)\)/\1/' | tr -d "\n")
+    IFS=' ' read -r -a CURRENT_PLUGINS <<< "$EXISTING"
+    PLUGIN_SET=()
+    for PLUGIN in "${CURRENT_PLUGINS[@]}" "${WANTED_PLUGINS[@]}"; do
+        [[ " ${PLUGIN_SET[*]} " == *" $PLUGIN "* ]] || PLUGIN_SET+=("$PLUGIN")
+    done
+    NEW_LINE="plugins=(${PLUGIN_SET[*]})"
+    sed -i "s/^plugins=.*/$NEW_LINE/" "$HOME/.zshrc"
+else
+    echo "plugins=(${WANTED_PLUGINS[*]})" >> "$HOME/.zshrc"
 fi
 
 # 5. Tmux Plugin Manager installieren und einrichten
