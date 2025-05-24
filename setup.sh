@@ -86,6 +86,7 @@ if grep -q 'source \$ZSH/oh-my-zsh.sh' "$HOME/.zshrc"; then
         'zstyle '"'"':omz:update'"'"' mode auto'
         'ZSH_TMUX_AUTOSTART="true"'
         'ZSH_TMUX_UNICODE="true"'
+        'ZSH_TMUX_FIXTERM_WITH_256COLOR="true"'
     )
     for LINE in "${PRE_LINES[@]}"; do
         grep -qxF "$LINE" "$HOME/.zshrc" || sed -i "/source \$ZSH\/oh-my-zsh.sh/i $LINE" "$HOME/.zshrc"
