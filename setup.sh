@@ -79,6 +79,30 @@ else
     echo "plugins=(${WANTED_PLUGINS[*]})" >> "$HOME/.zshrc"
 fi
 
+# Zusätzliche Konfigurationen in .zshrc
+ZSHRC_APPEND=(
+    'ENABLE_CORRECTION="true"'
+    'zstyle '"'":omz:update"'"' mode auto'
+    'ZSH_TMUX_AUTOSTART="true"'
+    'ZSH_TMUX_UNICODE="true"'
+    '# Set up fzf key bindings and fuzzy completion'
+    'source <(fzf --zsh)'
+)
+
+for LINE in "${ZSHRC_APPEND[@]}"; do
+    grep -qxF "$LINE" "$HOME/.zshrc" || echo "$LINE" >> "$HOME/.zshrc"
+    echo "[+] Zeile zu .zshrc hinzugefügt: $LINE"
+done
+
+# FZF über GitHub installieren
+if [ ! -d "$HOME/.fzf" ]; then
+    echo "[+] Installiere fzf von GitHub"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --key-bindings --completion --no-update-rc
+else
+    echo "[i] fzf ist bereits installiert."
+fi
+
 # 5. Tmux Plugin Manager installieren und einrichten
 TPM_DIR="$HOME/.tmux/plugins/tpm"
 if [ ! -d "$TPM_DIR" ]; then
