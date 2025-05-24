@@ -8,17 +8,28 @@ echo "[+] Installiere Pakete: ${PACKAGES[*]}"
 sudo apt update
 sudo apt install -y "${PACKAGES[@]}"
 
-# 2. Prüfen und setzen des apt Proxy
-APT_PROXY_FILE="/etc/apt/apt.conf.d/01proxy"
-PROXY_ADDRESS="http://10.12.1.48:3142"
-echo "[+] Überprüfe APT Proxy..."
+# 2. Prüfen und setzen des apt Proxy über apt-proxy-detect.sh
+APT_PROXY_SCRIPT="/usr/local/bin/apt-proxy-detect.sh"
+APT_CONF_FILE="/etc/apt/apt.conf.d/00aptproxy"
 
-if grep -q "$PROXY_ADDRESS" "$APT_PROXY_FILE" 2>/dev/null; then
-    echo "[i] APT Proxy ist bereits gesetzt."
+if [ -x "$APT_PROXY_SCRIPT" ]; then
+    echo "[i] apt-proxy-detect.sh ist vorhanden und ausführbar."
 else
-    echo "Acquire::http::Proxy \"$PROXY_ADDRESS\";" | sudo tee "$APT_PROXY_FILE"
-    echo "[+] APT Proxy wurde gesetzt."
+    echo "[+] Erstelle apt-proxy-detect.sh"
+    sudo tee "$APT_PROXY_SCRIPT" > /dev/null <<EOF
+#!/bin/bash
+if nc -w1 -z "10.12.1.48" 3142; then
+  echo -n "http://10.12.1.48:3142"
+else
+  echo -n "DIRECT"
 fi
+EOF
+    sudo chmod +x "$APT_PROXY_SCRIPT"
+fi
+
+echo "Acquire::http::Proxy \"\$(/usr/local/bin/apt-proxy-detect.sh)\";" | sudo tee "$APT_CONF_FILE" > /dev/null
+
+echo "[+] APT Proxy wurde gesetzt über apt-proxy-detect.sh."
 
 # 3. zsh als Standardshell setzen
 if [ "$SHELL" != "$(which zsh)" ]; then
