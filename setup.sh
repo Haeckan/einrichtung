@@ -55,13 +55,24 @@ else
     echo "[i] Oh My Zsh ist bereits installiert."
 fi
 
-# 5. Zsh Plugins installieren
+# Zsh Plugins installieren
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 PLUGINS=(zsh-autosuggestions zsh-syntax-highlighting)
 for PLUGIN in "${PLUGINS[@]}"; do
     echo "[+] Installiere Plugin: $PLUGIN"
-    git clone https://github.com/zsh-users/$PLUGIN "$ZSH_CUSTOM/plugins/$PLUGIN" 2>/dev/null || echo "[i] $PLUGIN bereits vorhanden."
+    case $PLUGIN in
+        zsh-autosuggestions)
+            git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/$PLUGIN" || echo "[i] $PLUGIN bereits vorhanden."
+            ;;
+        zsh-syntax-highlighting)
+            git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/$PLUGIN" || echo "[i] $PLUGIN bereits vorhanden."
+            ;;
+    esac
 done
+
+# Powerlevel10k Theme installieren
+echo "[+] Installiere Powerlevel10k Theme"
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
 
 # 6. Tmux Plugin Manager installieren und einrichten
 TPM_DIR="$HOME/.tmux/plugins/tpm"
