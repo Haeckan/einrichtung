@@ -55,31 +55,15 @@ else
     echo "[i] Oh My Zsh ist bereits installiert."
 fi
 
-# Zsh Plugins installieren
+# 5. Zsh Plugins installieren
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 PLUGINS=(zsh-autosuggestions zsh-syntax-highlighting)
 for PLUGIN in "${PLUGINS[@]}"; do
     echo "[+] Installiere Plugin: $PLUGIN"
-    case $PLUGIN in
-        zsh-autosuggestions)
-            git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/$PLUGIN" || echo "[i] $PLUGIN bereits vorhanden."
-            ;;
-        zsh-syntax-highlighting)
-            git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/$PLUGIN" || echo "[i] $PLUGIN bereits vorhanden."
-            ;;
-    esac
+    git clone https://github.com/zsh-users/$PLUGIN "$ZSH_CUSTOM/plugins/$PLUGIN" 2>/dev/null || echo "[i] $PLUGIN bereits vorhanden."
 done
 
-# FZF über GitHub installieren
-if [ ! -d "$HOME/.fzf" ]; then
-    echo "[+] Installiere fzf von GitHub"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --key-bindings --completion --no-update-rc
-else
-    echo "[i] fzf ist bereits installiert."
-fi
-
-# 5. Tmux Plugin Manager installieren
+# 6. Tmux Plugin Manager installieren und einrichten
 TPM_DIR="$HOME/.tmux/plugins/tpm"
 if [ ! -d "$TPM_DIR" ]; then
     echo "[+] Installiere Tmux Plugin Manager"
@@ -88,7 +72,27 @@ else
     echo "[i] TPM ist bereits installiert."
 fi
 
-# 6. System aktualisieren und neustarten
+# 7. Konfigurationsdateien aus GitHub Repository laden
+CONFIG_FILES=(
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/mc%20config/ini|$HOME/.config/mc/ini"
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/mc/dracula256.ini|$HOME/.local/share/mc/skins/dracula256.ini"
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.p10k.zsh|$HOME/.p10k.zsh"
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.tmux.conf|$HOME/.tmux.conf"
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.zshrc|$HOME/.zshrc"
+)
+
+for ENTRY in "${CONFIG_FILES[@]}"; do
+    IFS='|' read -r URL DEST <<< "$ENTRY"
+    echo "[+] Lade $(basename "$DEST")"
+    mkdir -p "$(dirname "$DEST")"
+    if [ -f "$DEST" ]; then
+        mv "$DEST" "$DEST.bak"
+        echo "[i] Alte Datei wurde gesichert: $DEST.bak"
+    fi
+    curl -fsSL "$URL" -o "$DEST"
+done
+
+# 8. System aktualisieren und neustarten
 echo "[+] System wird aktualisiert..."
 sudo apt update && sudo apt upgrade -y
 
