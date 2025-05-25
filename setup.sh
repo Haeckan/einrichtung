@@ -21,7 +21,7 @@ EOF
     sudo chmod +x "$APT_PROXY_SCRIPT"
 fi
 
-echo "Acquire::http::Proxy \"\$(/usr/local/bin/apt-proxy-detect.sh)\";" | sudo tee "$APT_CONF_FILE" > /dev/null
+echo "Acquire::http::Proxy-Auto-Detect \"\(/usr/local/bin/apt-proxy-detect.sh)\";" | sudo tee "$APT_CONF_FILE" > /dev/null
 
 echo "[+] APT Proxy wurde gesetzt über apt-proxy-detect.sh."
 
