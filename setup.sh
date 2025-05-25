@@ -26,10 +26,19 @@ echo "Acquire::http::Proxy-Auto-Detect \"\/usr/local/bin/apt-proxy-detect.sh\";"
 echo "[+] APT Proxy wurde gesetzt über apt-proxy-detect.sh."
 
 # 2. Programme installieren
-PACKAGES=(nala htop mc iftop zsh curl wget git tmux rsync)
+PACKAGES=(nala htop mc iftop zsh curl wget git tmux rsync bat)
 echo "[+] Installiere Pakete: ${PACKAGES[*]}"
 sudo apt update
 sudo apt install -y "${PACKAGES[@]}"
+
+# Systemlink für batcat -> bat erstellen
+mkdir -p "$HOME/.local/bin"
+if [ ! -e "$HOME/.local/bin/bat" ]; then
+    ln -s /usr/bin/batcat "$HOME/.local/bin/bat"
+    echo "[+] Symbolischer Link für bat erstellt: ~/.local/bin/bat"
+else
+    echo "[i] Symbolischer Link für bat existiert bereits."
+fi
 
 # 3. zsh als Standardshell setzen
 if [ "$SHELL" != "$(which zsh)" ]; then
@@ -79,11 +88,10 @@ else
 fi
 
 # Zusätzliche Konfigurationen in .zshrc vor und nach source $ZSH/oh-my-zsh.sh
-
 if grep -q 'source \$ZSH/oh-my-zsh.sh' "$HOME/.zshrc"; then
     PRE_LINES=(
         'ENABLE_CORRECTION="true"'
-        'zstyle '"'"':omz:update'"'"' mode auto'
+        'zstyle '\''':omz:update'\'' mode auto'
         'ZSH_TMUX_AUTOSTART="true"'
         'ZSH_TMUX_UNICODE="true"'
         'ZSH_TMUX_FIXTERM_WITH_256COLOR="true"'
@@ -98,7 +106,7 @@ if grep -q 'source \$ZSH/oh-my-zsh.sh' "$HOME/.zshrc"; then
 else
     {
         echo 'ENABLE_CORRECTION="true"'
-        echo 'zstyle '"'"':omz:update'"'"' mode auto'
+        echo 'zstyle '\''':omz:update'\'' mode auto'
         echo 'ZSH_TMUX_AUTOSTART="true"'
         echo 'ZSH_TMUX_UNICODE="true"'
         echo 'source $ZSH/oh-my-zsh.sh'
@@ -114,7 +122,7 @@ EDITOR_LINES=(
 )
 for LINE in "${EDITOR_LINES[@]}"; do
     grep -qxF "$LINE" "$HOME/.zshrc" || echo "$LINE" >> "$HOME/.zshrc"
-done
+fi
 
 # FZF über GitHub installieren
 if [ ! -d "$HOME/.fzf" ]; then
