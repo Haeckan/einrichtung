@@ -31,7 +31,7 @@ echo "[+] Installiere Pakete: ${PACKAGES[*]}"
 sudo apt update
 sudo apt install -y "${PACKAGES[@]}"
 
-# Systemlink für batcat -> bat erstellen
+# 3. Systemlink für batcat -> bat erstellen
 mkdir -p "$HOME/.local/bin"
 if [ ! -e "$HOME/.local/bin/bat" ]; then
     ln -s /usr/bin/batcat "$HOME/.local/bin/bat"
@@ -40,13 +40,13 @@ else
     echo "[i] Symbolischer Link für bat existiert bereits."
 fi
 
-# 3. zsh als Standardshell setzen
+# 4. zsh als Standardshell setzen
 if [ "$SHELL" != "$(which zsh)" ]; then
     echo "[+] Setze zsh als Standardshell für Benutzer $USER"
     chsh -s "$(which zsh)"
 fi
 
-# 4. Oh My Zsh installieren
+# 5. Oh My Zsh installieren
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo "[+] Installiere Oh My Zsh"
     RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
@@ -55,7 +55,7 @@ else
     echo "[i] Oh My Zsh ist bereits installiert."
 fi
 
-# Zsh Plugins installieren
+# 6. Zsh Plugins installieren
 ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
 PLUGINS=(zsh-autosuggestions zsh-syntax-highlighting)
 for PLUGIN in "${PLUGINS[@]}"; do
@@ -70,11 +70,20 @@ for PLUGIN in "${PLUGINS[@]}"; do
     esac
 done
 
-# Powerlevel10k Theme installieren
+# 7. Powerlevel10k Theme installieren
 echo "[+] Installiere Powerlevel10k Theme"
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
 
-# 6. Tmux Plugin Manager installieren und einrichten
+# 8. FZF über GitHub installieren
+if [ ! -d "$HOME/.fzf" ]; then
+    echo "[+] Installiere fzf von GitHub"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --key-bindings --completion --no-update-rc
+else
+    echo "[i] fzf ist bereits installiert."
+fi
+
+# 9. Tmux Plugin Manager installieren und einrichten
 TPM_DIR="$HOME/.tmux/plugins/tpm"
 if [ ! -d "$TPM_DIR" ]; then
     echo "[+] Installiere Tmux Plugin Manager"
@@ -83,7 +92,7 @@ else
     echo "[i] TPM ist bereits installiert."
 fi
 
-# 7. Konfigurationsdateien aus GitHub Repository laden
+# 10. Konfigurationsdateien aus GitHub Repository laden
 CONFIG_FILES=(
   "https://raw.githubusercontent.com/Haeckan/einrichtung/main/mc%20config/ini|$HOME/.config/mc/ini"
   "https://raw.githubusercontent.com/Haeckan/einrichtung/main/mc/dracula256.ini|$HOME/.local/share/mc/skins/dracula256.ini"
@@ -103,7 +112,7 @@ for ENTRY in "${CONFIG_FILES[@]}"; do
     curl -fsSL "$URL" -o "$DEST"
 done
 
-# 8. System aktualisieren und neustarten
+# 11. System aktualisieren und neustarten
 echo "[+] System wird aktualisiert..."
 sudo apt update && sudo apt upgrade -y
 
