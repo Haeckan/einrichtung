@@ -99,6 +99,7 @@ CONFIG_FILES=(
   "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.p10k.zsh|$HOME/.p10k.zsh"
   "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.tmux.conf|$HOME/.tmux.conf"
   "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.zshrc|$HOME/.zshrc"
+  "https://github.com/Haeckan/einrichtung/raw/refs/heads/main/root/fastfetch/root/config.jsonc|$HOME/.config/fastfetch/config.jsonc"
 )
 
 for ENTRY in "${CONFIG_FILES[@]}"; do
@@ -110,9 +111,44 @@ for ENTRY in "${CONFIG_FILES[@]}"; do
         echo "[i] Alte Datei wurde gesichert: $DEST.bak"
     fi
     curl -fsSL "$URL" -o "$DEST"
+    [[ "$DEST" == "$HOME/.config/fastfetch/config.jsonc" ]] && echo "[+] Fastfetch Konfiguration installiert."
+    
+    chmod +x "$DEST" 2>/dev/null || true
+    
+    if [[ "$DEST" == "/root/.start.sh" ]]; then
+        sudo chmod +x "$DEST"
+    fi
+
 done
 
-# 11. System aktualisieren und neustarten
+# /root/.start.sh separat behandeln
+START_SCRIPT_URL="https://github.com/Haeckan/einrichtung/raw/refs/heads/main/root/.start.sh"
+START_SCRIPT_DEST="/root/.start.sh"
+echo "[+] Lade .start.sh nach /root/.start.sh"
+sudo curl -fsSL "$START_SCRIPT_URL" -o "$START_SCRIPT_DEST"
+sudo chmod +x "$START_SCRIPT_DEST"
+echo "[+] .start.sh ist jetzt ausführbar."
+
+# 11. Fastfetch installieren (neueste Version von GitHub Release)
+echo "[+] Installiere Fastfetch (neueste Version)"
+FASTFETCH_TMP_DIR="/tmp/fastfetch"
+sudo rm -rf "$FASTFETCH_TMP_DIR"
+mkdir -p "$FASTFETCH_TMP_DIR"
+
+LATEST_URL=$(curl -s https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest \
+  | grep "browser_download_url.*linux-amd64.deb" \
+  | cut -d '"' -f 4)
+
+if [[ -z "$LATEST_URL" ]]; then
+    echo "[!] Konnte die neueste Version von Fastfetch nicht finden. Abbruch."
+else
+    echo "[+] Lade Fastfetch von: $LATEST_URL"
+    curl -L "$LATEST_URL" -o "$FASTFETCH_TMP_DIR/fastfetch.deb"
+    sudo apt install -y "$FASTFETCH_TMP_DIR/fastfetch.deb"
+    echo "[+] Fastfetch wurde erfolgreich installiert."
+fi
+
+# 12. System aktualisieren und neustarten
 echo "[+] System wird aktualisiert..."
 sudo apt update && sudo apt upgrade -y
 
