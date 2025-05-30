@@ -126,3 +126,5 @@ export FZF_DEFAULT_OPTS='--height 40% --tmux 60% --layout reverse --border top -
 export TERM="xterm-256color"
 autoload -U colors && colors
 export PATH="$HOME/.local/bin:$PATH"
+
+./.start.sh
