@@ -8,4 +8,4 @@ alpine
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Haeckan/einrichtung/refs/heads/main/alpine-setup.sh)"
 ```
 
-strg+b umschalt i
+strg+b umschalt+i
