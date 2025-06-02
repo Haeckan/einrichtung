@@ -148,6 +148,8 @@ else
     echo "[+] Fastfetch wurde erfolgreich installiert."
 fi
 
+nano .start.sh
+
 # 12. System aktualisieren und neustarten
 echo "[+] System wird aktualisiert..."
 sudo apt update && sudo apt upgrade -y
