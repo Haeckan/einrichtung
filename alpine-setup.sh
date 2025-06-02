@@ -5,8 +5,8 @@ set -e
 # 1. Programme installieren
 PACKAGES="htop mc iftop zsh curl wget git tmux rsync bat fzf fastfetch shadow"
 echo "[+] Installiere Pakete: $PACKAGES"
-sudo apk update
-sudo apk add $PACKAGES
+apk update
+apk add $PACKAGES
 
 # 2. Systemlink für bat -> ~/.local/bin/bat erstellen
 mkdir -p "$HOME/.local/bin"
