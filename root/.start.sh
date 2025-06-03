@@ -7,4 +7,4 @@
 fastfetch
 
 # Benutzerdefinierten Text ausgeben
-echo "Systeminfo oben – Viel Spaß mit deinem Linux-System!"
+echo "PLATZHALTER"
