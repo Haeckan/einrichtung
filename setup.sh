@@ -26,7 +26,7 @@ echo 'Acquire::http::Proxy-Auto-Detect "/usr/local/bin/apt-proxy-detect.sh";' | 
 echo "[+] APT Proxy wurde gesetzt über apt-proxy-detect.sh."
 
 # 2. Programme installieren
-PACKAGES=(nala htop mc iftop zsh curl wget git tmux rsync bat)
+PACKAGES=(nala htop mc iftop zsh curl wget git tmux rsync bat btop)
 echo "[+] Installiere Pakete: ${PACKAGES[*]}"
 sudo apt update
 sudo apt install -y "${PACKAGES[@]}"
