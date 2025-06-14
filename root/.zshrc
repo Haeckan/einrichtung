@@ -127,4 +127,4 @@ export TERM="xterm-256color"
 autoload -U colors && colors
 export PATH="$HOME/.local/bin:$PATH"
 
-./.start.sh
+~/./.start.sh
