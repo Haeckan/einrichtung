@@ -9,3 +9,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/Haeckan/einrichtung/refs
 ```
 
 strg+b umschalt+i
+
+
+
+https://github.com/BassT23/Proxmox
