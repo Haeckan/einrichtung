@@ -136,7 +136,7 @@ sudo rm -rf "$FASTFETCH_TMP_DIR"
 mkdir -p "$FASTFETCH_TMP_DIR"
 
 LATEST_URL=$(curl -s https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest \
-  | grep "browser_download_url.*linux-amd64.deb" \
+  | grep "browser_download_url.*linux-armv7l.deb" \
   | cut -d '"' -f 4)
 
 if [[ -z "$LATEST_URL" ]]; then
