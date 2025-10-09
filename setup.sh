@@ -130,23 +130,23 @@ sudo chmod +x "$START_SCRIPT_DEST"
 echo "[+] .start.sh ist jetzt ausführbar."
 
 # 11. Fastfetch installieren (neueste Version von GitHub Release)
-echo "[+] Installiere Fastfetch (neueste Version)"
-FASTFETCH_TMP_DIR="/tmp/fastfetch"
-sudo rm -rf "$FASTFETCH_TMP_DIR"
-mkdir -p "$FASTFETCH_TMP_DIR"
+#echo "[+] Installiere Fastfetch (neueste Version)"
+#FASTFETCH_TMP_DIR="/tmp/fastfetch"
+#sudo rm -rf "$FASTFETCH_TMP_DIR"
+#mkdir -p "$FASTFETCH_TMP_DIR"
 
-LATEST_URL=$(curl -s https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest \
-  | grep "browser_download_url.*linux-armv6l.deb" \
-  | cut -d '"' -f 4)
+#LATEST_URL=$(curl -s https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest \
+#  | grep "browser_download_url.*linux-amd64.deb" \
+#  | cut -d '"' -f 4)
 
-if [[ -z "$LATEST_URL" ]]; then
-    echo "[!] Konnte die neueste Version von Fastfetch nicht finden. Abbruch."
-else
-    echo "[+] Lade Fastfetch von: $LATEST_URL"
-    curl -L "$LATEST_URL" -o "$FASTFETCH_TMP_DIR/fastfetch.deb"
-    sudo apt install -y "$FASTFETCH_TMP_DIR/fastfetch.deb"
-    echo "[+] Fastfetch wurde erfolgreich installiert."
-fi
+#if [[ -z "$LATEST_URL" ]]; then
+#    echo "[!] Konnte die neueste Version von Fastfetch nicht finden. Abbruch."
+#else
+#    echo "[+] Lade Fastfetch von: $LATEST_URL"
+#    curl -L "$LATEST_URL" -o "$FASTFETCH_TMP_DIR/fastfetch.deb"
+#    sudo apt install -y "$FASTFETCH_TMP_DIR/fastfetch.deb"
+#    echo "[+] Fastfetch wurde erfolgreich installiert."
+#fi
 
 nano .start.sh
 
