@@ -12,7 +12,7 @@ else
     echo "[+] Erstelle apt-proxy-detect.sh"
     sudo tee "$APT_PROXY_SCRIPT" > /dev/null <<EOF
 #!/bin/bash
-if nc -w1 -z "10.12.1.48" 3142; then
+if nc -w1 -z "10.10.1.5" 3142; then
   echo -n "http://10.12.1.48:3142"
 else
   echo -n "DIRECT"
