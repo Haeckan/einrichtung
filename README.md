@@ -36,13 +36,13 @@ Repository:
 ## Debian / Ubuntu
 
 ```sh
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Haeckan/einrichtung/refs/heads/main/setup.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Haeckan/einrichtung/refs/heads/main/ZFS+TMUX/setup.sh)"
 ```
 
 ## Alpine Linux
 
 ```sh
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Haeckan/einrichtung/refs/heads/main/alpine-setup.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Haeckan/einrichtung/refs/heads/main/ZFS+TMUX/alpine-setup.sh)"
 ```
 
 ---
