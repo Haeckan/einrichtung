@@ -13,7 +13,7 @@ else
     sudo tee "$APT_PROXY_SCRIPT" > /dev/null <<EOF
 #!/bin/bash
 if nc -w1 -z "10.10.1.5" 3142; then
-  echo -n "http://10.12.1.48:3142"
+  echo -n "http://10.10.1.5:3142"
 else
   echo -n "DIRECT"
 fi
@@ -92,42 +92,46 @@ else
     echo "[i] TPM ist bereits installiert."
 fi
 
-# 10. Konfigurationsdateien aus GitHub Repository laden
+# 10. Konfigurationsdateien aus GitHub Repository laden (neues Verzeichnis)
 CONFIG_FILES=(
-  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/mc%20config/ini|$HOME/.config/mc/ini"
-  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/mc/dracula256.ini|$HOME/.local/share/mc/skins/dracula256.ini"
-  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.p10k.zsh|$HOME/.p10k.zsh"
-  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.tmux.conf|$HOME/.tmux.conf"
-  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/root/.zshrc|$HOME/.zshrc"
-  "https://github.com/Haeckan/einrichtung/raw/refs/heads/main/root/fastfetch/root/config.jsonc|$HOME/.config/fastfetch/config.jsonc"
+  # Midnight Commander config
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/ZFS+TMUX/mc%20config/ini|$HOME/.config/mc/ini"
+  # MC Skin
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/ZFS+TMUX/mc/dracula256.ini|$HOME/.local/share/mc/skins/dracula256.ini"
+  # Powerlevel10k config
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/ZFS+TMUX/root/.p10k.zsh|$HOME/.p10k.zsh"
+  # Tmux config
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/ZFS+TMUX/root/.tmux.conf|$HOME/.tmux.conf"
+  # Zsh config
+  "https://raw.githubusercontent.com/Haeckan/einrichtung/main/ZFS+TMUX/root/.zshrc|$HOME/.zshrc"
+  # Fastfetch config
+  "https://github.com/Haeckan/einrichtung/raw/refs/heads/main/ZFS+TMUX/root/fastfetch/root/config.jsonc|$HOME/.config/fastfetch/config.jsonc"
 )
 
 for ENTRY in "${CONFIG_FILES[@]}"; do
     IFS='|' read -r URL DEST <<< "$ENTRY"
-    echo "[+] Lade $(basename "$DEST")"
+    echo "[+] Lade $(basename "$DEST") von $URL"
     mkdir -p "$(dirname "$DEST")"
     if [ -f "$DEST" ]; then
         mv "$DEST" "$DEST.bak"
         echo "[i] Alte Datei wurde gesichert: $DEST.bak"
     fi
     curl -fsSL "$URL" -o "$DEST"
+    echo "[+] $(basename "$DEST") wurde installiert nach $DEST"
+    
     [[ "$DEST" == "$HOME/.config/fastfetch/config.jsonc" ]] && echo "[+] Fastfetch Konfiguration installiert."
     
     chmod +x "$DEST" 2>/dev/null || true
-    
-    if [[ "$DEST" == "/root/.start.sh" ]]; then
-        sudo chmod +x "$DEST"
-    fi
-
 done
 
-# /root/.start.sh separat behandeln
-START_SCRIPT_URL="https://github.com/Haeckan/einrichtung/raw/refs/heads/main/root/.start.sh"
+# /root/.start.sh separat behandeln (neuer Pfad)
+START_SCRIPT_URL="https://github.com/Haeckan/einrichtung/raw/refs/heads/main/ZFS+TMUX/root/.start.sh"
 START_SCRIPT_DEST="/root/.start.sh"
-echo "[+] Lade .start.sh nach /root/.start.sh"
+echo "[+] Lade .start.sh von $START_SCRIPT_URL nach /root/.start.sh"
 sudo curl -fsSL "$START_SCRIPT_URL" -o "$START_SCRIPT_DEST"
 sudo chmod +x "$START_SCRIPT_DEST"
 echo "[+] .start.sh ist jetzt ausführbar."
+
 
 # 11. Fastfetch installieren (neueste Version von GitHub Release)
 #echo "[+] Installiere Fastfetch (neueste Version)"
