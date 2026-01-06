@@ -1,4 +1,6 @@
-# Proxmox Speicher & ZFS Setup
+
+# 🖥️ Proxmox Speicher & ZFS Setup
+
 
 ## Inhaltsverzeichnis
 
@@ -9,6 +11,7 @@
   - [Alpine Linux](#alpine-linux)
 - [Tastenkombination](#tastenkombination)
 - [Merkliste](#merkliste)
+
 
 ---
 
@@ -59,3 +62,6 @@ Nützliche Ressourcen rund um Proxmox:
 
 
 ---
+
+![GitHub Repo Size](https://img.shields.io/github/repo-size/Haeckan/einrichtung?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/Haeckan/einrichtung/main?style=flat-square)
