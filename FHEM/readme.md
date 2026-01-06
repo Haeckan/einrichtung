@@ -1,8 +1,3 @@
-Ja 👍
-Ich habe die README jetzt **GitHub-typisch formatiert** (saubere Überschriften, konsistente Codeblöcke, klare Struktur, gut renderbar auf GitHub).
-
-👉 **Direkt als `README.md` für ein GitHub-Repo nutzbar**
-
 ---
 
 ````md
@@ -194,15 +189,4 @@ get CUL version
 
 This documentation is provided as-is and may be freely used and adapted.
 
-```
-
----
-
-Wenn du willst, kann ich dir noch:
-- 🏷️ ein **Repository-Description + Topics**
-- 📂 eine sinnvolle **Repo-Struktur**
-- 🧪 ein **Test-/Debug-Kapitel**
-- 🔁 einen **Reconnect-Watchdog für FHEM**
-
-für GitHub vorbereiten.
 ```
